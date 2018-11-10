@@ -111,5 +111,6 @@ def autoencoder(input_img):
 	decoded = Dense(2800, activation='relu')(decoded)
 	decoded = Dense(4096, activation='relu')(decoded)
 	decoded= Dense(1, activation='relu')(decoded)
+
 	print(type(encodedd))
 	return encoded
