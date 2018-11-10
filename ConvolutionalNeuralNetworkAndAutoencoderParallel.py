@@ -156,3 +156,14 @@ def createModel():
     model.add(Dense(nClasses, activation='softmax'))
 
     return model
+
+model1 = createModel()
+batch_size = 256
+epochs = 500
+model1.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+
+model1.summary()
+
+print(len(train_labels_one_hot))
+history = model1.fit(train_data, train_labels_one_hot, batch_size=batch_size, epochs=epochs, verbose=1,validation_data=(test_data, test_labels_one_hot))
+model1.evaluate(test_data, test_labels_one_hot)
