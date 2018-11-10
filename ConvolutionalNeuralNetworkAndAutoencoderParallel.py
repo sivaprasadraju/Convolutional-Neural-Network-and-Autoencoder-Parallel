@@ -114,3 +114,45 @@ def autoencoder(input_img):
 
 	print(type(encodedd))
 	return encoded
+
+def createModel():
+    global encodedd
+    global Merge
+    model = Sequential()
+    a = Sequential()
+    input_img = Input(shape = [256,256,1])
+
+    autoencode = Model(input_img, autoencoder(input_img))
+    a.add(autoencode)
+    a.add(Reshape((2097152,1)))
+    autoencode.compile(loss='mean_squared_error', optimizer = RMSprop())
+
+    model.add(Conv2D(10, (3, 3), padding='same', activation='relu', input_shape=input_shape))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Conv2D(10, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.6))
+
+    model.add(Conv2D(10, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.6))
+
+    model.add(Conv2D(10, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.6))
+
+    model.add(Conv2D(10, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.6))
+    model.add(Reshape((640,1)))
+    merged_model = Sequential()
+    merged_model.add(Merge([model,a], mode='concat', concat_axis = 1))
+
+    model.add(Flatten())
+    print(np.shape(model))
+    model.add(Dense(256, activation='relu'))
+    model.add(Dense(128, activation='relu'))
+    model.add(Dropout(0.6))
+    model.add(Dense(nClasses, activation='softmax'))
+
+    return model
